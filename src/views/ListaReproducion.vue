@@ -1,0 +1,83 @@
+<template>
+  <div class="container">
+    <h1>Listado de Canciones</h1>
+
+    <b-row>
+      <b-col>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Preguntas</th>
+                <th scope="col">Artista</th>
+                <th scope="col">Respuestas</th>
+                <th scope="col">Acciones</th>
+                <!-- <th scope="col">Ficha</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in items" :key="item.id">
+                <td>{{ item.titulo_cancion }}</td>
+                <td>
+                  <b-button  @click="postProyecto()" variant="success" class="enviar">Agregar</b-button>
+                </td>
+                <td>
+                  <b-button @click="fichaProyectos(item.id)" variant="primary" class="m-1">Ver</b-button>
+                </td>
+                <td>
+                  <b-button @click="editarEntrega(item)" variant="warning" class="m-1 mr-2">
+                    <b-icon icon="pencil"></b-icon>
+                  </b-button>
+                  <b-button @click="eliminarEntrega(item.id)" variant="danger">
+                    <b-icon icon="trash"></b-icon>
+                  </b-button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      
+            
+        </div>
+      </b-col>
+    </b-row>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      perPage: 5, // Adjust the number of items per page as needed
+      currentPage: 1,
+      items: null
+    };
+  },
+  // computed: {
+  //   rows() {
+  //     return this.items.length;
+  //   },
+   
+  //   paginatedItems() {
+  //     const startIndex = (this.currentPage - 1) * this.perPage;
+  //     const endIndex = startIndex + this.perPage;
+  //     return this.items.slice(startIndex, endIndex);
+  //   }
+  // },
+  methods: {
+    async getProyecto (){
+      await axios.get('api/lista_canciones').then(response=>{
+          this.items= response.data
+          console.log(this.items[0].artista
+)
+          });
+          
+      },
+      
+    
+  },
+  mounted(){
+    this.getProyecto()
+  }
+};
+</script>
