@@ -6,10 +6,6 @@ import ListaReproducion from '@/views/ListaReproducion'
 
 
 
-
-
-
-
 Vue.use(VueRouter)
 
 const routes = [

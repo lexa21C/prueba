@@ -1,120 +1,95 @@
 <template>
-  <div>
-  <div class="imglogin">
+  <div class="background-image">
+    <b-container>
+      <b-row class="justify-content-center">
+        <b-col cols="12" sm="6" md="5">
+          <b-card class="transparent-card">
+            <b-row class="text-center">
+              <h1>Registrar</h1>
+            </b-row>
+            <b-row>
+              <b-form @submit.prevent="submitForm">
+                <b-form-group id="name-group" label="Nombre:" label-for="username">
+                  <b-form-input v-model="name" id="username" name="username"></b-form-input>
+                </b-form-group>
+                <b-form-group id="email-group" label="Correo electrónico:" label-for="email">
+                  <b-form-input v-model="email" id="email" name="email" type="email"></b-form-input>
+                </b-form-group>
+                <b-form-group id="password-group" label="Contraseña:" label-for="password">
+                  <b-form-input v-model="password" id="password" name="password" type="password"></b-form-input>
+                </b-form-group>
+                <b-form-group id="password-confirmation-group" label="Confirmar Contraseña:" label-for="password_confirmation">
+                  <b-form-input v-model="password_confirmation" id="password_confirmation" name="password_confirmation" type="password"></b-form-input>
+                </b-form-group>
+                <div class="m-2 text-center">
+                  <hr class="my-4">
+                  <b-button type="submit" variant="primary"> Registrar</b-button>
+                  <p>¿Ya tienes una cuenta? <router-link to="/Login">Iniciar sesión</router-link></p>
+                </div>
+              </b-form>
+            </b-row>
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
-    <div class="containerlogin">
-      <div class="row m-1 d-flex justify-content-center">
-        <b-card class="col-6">
-          <h1>Iniciar sesión</h1>
-          <form @submit.prevent="submitForm">
-            <div class="mb-3">
-              <label for="username" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="username" name="username" v-model="name">
-            </div>
-            <div class="mb-3">
-              <label for="username" class="form-label">Correo electronico</label>
-              <input type="text" class="form-control" id="username" name="username" v-model="email">
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Contraseña</label>
-              <input type="password" class="form-control" id="password" name="password" v-model="password">
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label"> confirmar Contraseña</label>
-              <input type="password" class="form-control" id="password" name="password" v-model="password_confirmation">
-            </div>
-            <div class="d-flex justify-content-center">
-              <button type="submit" class="btn btn-primary">Iniciar sesion</button>
-            </div>
-          </form>
-        </b-card>
-      </div>
-    </div>
-
-    </div>
-  </template>
-  
+</template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
 export default {
-    data() {
-        return {
-            name: '',
-            email: '',
-            password: '',
-            password_confirmation: '',
-            
-        }
+  data() {
+    return {
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+    };
+  },
+  methods: {
+    submitForm() {
+      axios.defaults.headers.common['Authorization'] = '';
+      localStorage.removeItem('token');
+      if (!this.name || !this.email || !this.password || !this.password_confirmation) {
+        console.error('Please fill in all fields.');
+        return;
+      }
+      const formData = {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.password_confirmation,
+      };
+      axios
+        .post('api/registro_usuario', formData)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
-    mounted() {
-        
-    },
-    methods: {
-        submitForm() {
-            console.log('submitForm')
-            axios.defaults.headers.common['Authorization'] = ""
-            localStorage.removeItem('token')
-            this.errors = []
-            if (this.username === '') {
-                this.errors.push('The username is missing!')
-            }
-            if (this.password === '') {
-                this.errors.push('The password is missing!')
-            }
-            if (!this.errors.length) {
-                const formData = {
-                    name: this.name,
-                    email:this.email,
-                    password: this.password,
-                    password_confirmation:this.password_confirmation
-                }
-                axios
-                    .post('aapi/registro_usuario', formData)
-                    .then(response => {
-                      console.log(response)
-                        // const token = response.data.access_token
-                        // const username = response.data.user
-                        // const rol = response.data.otro
+  },
+};
+</script>
 
-                        // this.$store.commit('setToken', token)
-                        // this.$store.commit('setUsername', username)
-                        // this.$store.commit('setRol', rol)
-                        // axios.defaults.headers.common['Authorization'] = "Token " + token
-                        // localStorage.setItem('token', token)
-                        console.log('api/registro_usuario')
-                        
-                    })
-                    .catch(error => {
-                        if (error.response) {
-                            for (const property in error.response.data) {
-                                this.errors.push(`${property}: ${error.response.data[property]}`)
-                            }
-                            console.log(JSON.stringify(error.response.data))
-                        } else if (error.message) {
-                            this.errors.push('Something went wrong. Please try again')
-                            
-                            console.log(JSON.stringify(error))
-                        }
-                    })
-            }
-        }
-    }
-}
-</script> 
-
-<style>
-.containerlogin{
-  margin-top: 0px;
-  height: 800px;
-  width: 800px;
-margin-left: 280px;
+<style scoped>
+.background-image {
+  background-image: url('../assets/registrar.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
-.imglogin{
-  text-align: center;
+.transparent-card {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  margin: 60px; /* Agregar margen a la tarjeta */
 }
-
-
-
 </style>

@@ -22,9 +22,9 @@
 
 <!-- Resto del código igual -->
 
-<style>
+<style scoped>
 .navbar {
-  background-color: #00ABEA;
+  background-color: #2D4463;
 }
 
 .navbar-nav a.nav-link {
